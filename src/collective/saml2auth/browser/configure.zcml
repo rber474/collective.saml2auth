@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="collective.saml2auth">
+
+  <!-- Set overrides folder for Just-a-Bunch-Of-Templates product -->
+  <include package="z3c.jbot" file="meta.zcml" />
+  <browser:jbot
+      directory="overrides"
+      layer="collective.saml2auth.interfaces.ICollectiveSaml2AuthLayer"
+      />
+
+  <!-- Publish static files -->
+  <plone:static
+      name="collective.saml2auth"
+      type="plone"
+      directory="static"
+      />
+
+</configure>

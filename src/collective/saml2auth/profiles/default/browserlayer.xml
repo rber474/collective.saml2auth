@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layers>
+  <layer
+      name="collective.saml2auth"
+      interface="collective.saml2auth.interfaces.ICollectiveSaml2AuthLayer"
+      />
+</layers>
