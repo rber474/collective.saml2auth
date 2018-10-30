@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+   lang="en"
+   metal:use-macro="here/prefs_main_template/macros/master"
+   i18n:domain="plone">
+
+<body >
+<metal:override fill-slot="top_slot"
+  tal:define="disable_column_one python:request.set('disable_plone.leftcolumn',1);
+        disable_column_two python:request.set('disable_plone.rightcolumn',1);
+        disable_border python:request.set('disable_border', 1)"/>
+<div metal:fill-slot="prefs_configlet_main">
+  <tal:condition 
+    define="checkPermission nocall: context/portal_membership/checkPermission;"
+    condition="python:checkPermission('Manage Portal', context)">
+
+    <a href="" 
+      id="setup-link"
+      tal:attributes="href string:$portal_url/plone_control_panel"
+      i18n:translate="">
+      Site Setup
+    </a>
+  </tal:condition>
+  <h1 class="documentFirstHeading" id="parent-fieldname-title" tal:content="view/label">View Title</h1>
+  <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+   Portal status message
+  </div>
+
+  <div id="content-core">
+    <div id="layout-contents">
+      <span tal:replace="structure view/contents" />
+    </div>
+  </div>
+</div>
+</body>
+</html> 

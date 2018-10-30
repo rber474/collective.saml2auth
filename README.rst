@@ -7,11 +7,17 @@ collective.saml2auth
 ====================
 
 Integración de saml2 para Plone 4.3, basado en el desarrollo de python-saml https://pythonhosted.org/python-saml/
+La mayor parte del código está copiado de ftw.saml2auth, pero se ha eliminado la dependencia de ftw.upgrade 
+y de otros paquetes que dificultan la instalación con setuptools.
+
+El sitio plone actuará como un SP ante un IdP.
 
 Features
 --------
 
-- Can be bullet points
+- Panel de control para definir la configuración.
+- Plugin de usuario para la enumeración (IEnumerationPlugin) y los roles (IRolesPlugin)
+
 
 
 Examples

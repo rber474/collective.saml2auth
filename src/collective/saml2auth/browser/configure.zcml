@@ -11,11 +11,34 @@
       layer="collective.saml2auth.interfaces.ICollectiveSaml2AuthLayer"
       />
 
+  <include package="plone.app.controlpanel" />
+
   <!-- Publish static files -->
-  <plone:static
+  <browser:resourceDirectory
       name="collective.saml2auth"
-      type="plone"
       directory="static"
       />
+
+  <!--Control Panel -->
+  <browser:page
+    name="saml2auth-settings"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".controlpanel.Saml2AuthControlPanelView"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="saml2_form_properties"
+    class=".properties.Saml2FormProperties"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="saml2"
+    class=".saml2.Saml2View"
+    permission="zope.Public"
+    />
 
 </configure>

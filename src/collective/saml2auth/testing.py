@@ -9,6 +9,42 @@ from plone.testing import z2
 
 import collective.saml2auth
 
+from zope.configuration import xmlconfig
+from collective.saml2auth.plugin import SAML2Plugin
+
+
+class CollectiveSaml2authLayer(PloneSandboxLayer):
+
+    defaultBases = (PLONE_FIXTURE,)
+
+    def setUpZope(self, app, configurationContext):
+        # Load ZCML
+        import collective.saml2auth
+        xmlconfig.file('configure.zcml',
+                       collective.saml2auth,
+                       context=configurationContext)
+        z2.installProduct(app, 'collective.saml2auth')
+
+    def setUpPloneSite(self, portal):
+        applyProfile(portal, 'collective.saml2auth:default')
+
+        # Setup PAS plugin
+        uf = portal.acl_users
+        plugin = SAML2Plugin('saml2')
+        uf._setObject(plugin.getId(), plugin)
+        plugin = uf['saml2']
+        plugin.manage_activateInterfaces([
+            'IRolesPlugin',
+            'IUserEnumerationPlugin',
+        ])
+
+
+COLLECTIVE_SAML2AUTH_FIXTURE = CollectiveSaml2authLayer()
+COLLECTIVE_SAML2AUTH_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(COLLECTIVE_SAML2AUTH_FIXTURE,), name="collective.saml2auth:Integration")
+COLLECTIVE_SAML2AUTH_FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(COLLECTIVE_SAML2AUTH_FIXTURE,), name="collective.saml2auth:Functional")
+
 
 class CollectiveSaml2AuthLayer(PloneSandboxLayer):
 

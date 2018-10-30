@@ -49,6 +49,8 @@ setup(
         'plone.app.relationfield',
         'plone.app.lockingbehavior',
         'plone.schema',
+        'python-saml',
+        'netaddr',
     ],
     extras_require={
         'test': [
