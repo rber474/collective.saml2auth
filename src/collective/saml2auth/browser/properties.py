@@ -57,6 +57,9 @@ class Saml2FormProperties(BrowserView):
 
     def _get_base64_encoded_authn_request(self):
         authn_request = self._get_authn_request()
+        import logging
+        logger=logging.getLogger(__name__)
+        logger.info(authn_request.get_xml())
         if authn_request is None:
             return ''
         return authn_request.get_request(deflate=False)

@@ -45,7 +45,7 @@ class SAML2Plugin(BasePlugin):
         IUserEnumerationPlugin
     )
 
-    meta_type = "ftw.saml2auth plugin"
+    meta_type = "collective.saml2auth plugin"
     security = ClassSecurityInfo()
 
     # ZMI tab for configuration page

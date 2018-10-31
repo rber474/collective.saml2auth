@@ -41,4 +41,10 @@
     permission="zope.Public"
     />
 
+  <browser:page
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="saml2metadata"
+    class=".sp_metadata.MetadataView"
+    permission="zope.Public"
+    />
 </configure>

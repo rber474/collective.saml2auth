@@ -7,9 +7,61 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from collective.saml2auth import _
 
+dig_algorithm = SimpleVocabulary([
+    SimpleTerm(
+        value=u'http://www.w3.org/2000/09/xmldsig#sha1',
+        title=u'SHA1'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmlenc#sha256',
+        title=u'SHA256'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmldsig-more#sha384',
+        title=u'SHA384'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmlenc#sha512',
+        title=u'SHA512'),
+])
 
+sig_algorithm = SimpleVocabulary([
+    SimpleTerm(
+        value=u'http://www.w3.org/2000/09/xmldsig#dsa-sha1',
+        title=u'DSA_SHA1'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2000/09/xmldsig#rsa-sha1',
+        title=u'RSA_SHA1'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+        title=u'RSA_SHA256'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmldsig-more#rsa-sha384',
+        title=u'RSA_SHA384'),
+    SimpleTerm(
+        value=u'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512',
+        title=u'RSA_SHA512'),
+])
+
+authn_bindings = SimpleVocabulary([
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+        title=u'HTTP-POST'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+        title=u'HTTP-Redirect'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
+        title=u'HTTP-Artifact'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
+        title=u'SOAP'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE',
+        title=u'DEFLATE'),
+])
 
 authn_context_classes = SimpleVocabulary([
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified',
+        title=u'Unspecified'),
     SimpleTerm(
         value=u'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport',
         title=u'Password Protected Transport'),
@@ -19,7 +71,14 @@ authn_context_classes = SimpleVocabulary([
     SimpleTerm(
         value=u'urn:oasis:names:tc:SAML:2.0:ac:classes:Kerberos',
         title=u'Kerberos'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:ac:classes:X509',
+        title=u'X509'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:ac:classes:Password',
+        title=u'Password'),
 ])
+
 
 authn_context_comparison_methods = SimpleVocabulary([
     SimpleTerm(
@@ -49,8 +108,23 @@ nameid_formats = SimpleVocabulary([
     SimpleTerm(
         value=u'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
         title=u'Transient'),
-])
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName',
+        title=u'509SubjectName'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName',
+        title=u'WindowsDomainQualifiedName'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos',
+        title=u'Kerberos'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:nameid-format:entity',
+        title=u'Entity'),
+    SimpleTerm(
+        value=u'urn:oasis:names:tc:SAML:2.0:nameid-format:encrypted',
+        title=u'encrypted'),
 
+])
 
 class IServiceProviderSettings(Interface):
 
@@ -66,6 +140,12 @@ class IServiceProviderSettings(Interface):
         default=u'',
     )
 
+    idp_sso_binding = schema.Choice(
+        title=u'IdP SingleSignOnService Binding',
+        vocabulary=authn_bindings,
+        default=u'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+    )
+
     idp_url = schema.TextLine(
         title=u'IdP URL',
         description=u'URL of the IdP endpoint where AuthnRequests are send to.',
@@ -78,6 +158,12 @@ class IServiceProviderSettings(Interface):
         default=u'',
     )
 
+    sp_acs_binding = schema.Choice(
+        title=u'SP assertionConsumerService Binding',
+        vocabulary=authn_bindings,
+        default=u'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+    )
+    
     authn_context = schema.List(
         title=u'AuthN Context',
         value_type=schema.Choice(vocabulary=authn_context_classes),
@@ -93,6 +179,18 @@ class IServiceProviderSettings(Interface):
         title=u'AuthN Context Comparison',
         vocabulary=authn_context_comparison_methods,
         default=u'exact',
+    )
+
+    signature_algorithm  = schema.Choice(
+        title=u'Signature Algorithm',
+        vocabulary=sig_algorithm,
+        default=u'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+    )
+
+    digest_algorithm  = schema.Choice(
+        title=u'Digest Algorithm',
+        vocabulary=dig_algorithm,
+        default=u'http://www.w3.org/2001/04/xmlenc#sha256',
     )
 
     nameid_format = schema.Choice(

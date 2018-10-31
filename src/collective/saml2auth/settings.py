@@ -4,6 +4,8 @@ from plone import api
 from plone.registry.interfaces import IRegistry
 from zope.component import queryUtility
 
+import logging
+logger = logging.getLogger(__name__)
 
 def saml2_settings():
     registry = queryUtility(IRegistry)
@@ -25,7 +27,8 @@ def saml2_settings():
                 # URL Location where the Response from the IdP will be returned
                 "url": u'{}/saml2/sp/sso'.format(portal_url.decode('utf8')),
                 # SAML protocol binding to be used when returning the Response
-                "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                # "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                "binding": sp_settings.sp_acs_binding,
             },
             # Specifies the constraints on the name identifier to be used to
             # represent the requested subject.
@@ -41,7 +44,8 @@ def saml2_settings():
                 # Message will be sent.
                 "url": sp_settings.idp_url,
                 # SAML protocol binding to be used when returning the Response
-                "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+                # "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+                "binding": sp_settings.idp_sso_binding,
             },
             # Public x509 certificate of the IdP
             "x509cert": sp_settings.idp_cert or '',
@@ -49,8 +53,9 @@ def saml2_settings():
         "security": {
             "requestedAuthnContext": authn_context,
             "requestedAuthnContextComparison": sp_settings.authn_context_comparison,
-            "signatureAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
-            "digestAlgorithm": "http://www.w3.org/2001/004/xmlenc#sha56"
+            "signatureAlgorithm": sp_settings.signature_algorithm,
+            "digestAlgorithm": sp_settings.digest_algorithm,
         }
     }
+    logger.info(settings_data)
     return OneLogin_Saml2_Settings(settings_data)
