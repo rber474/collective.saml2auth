@@ -60,7 +60,7 @@ Troubleshooting
 ---------------
 En CentOS 6 y CentOS 7 existe un problema con dm.xmlsec.binding y xmlsec1-config de la
 libreria xmlsec1-devel.
-En caso de error ImportError: lxml.etree does not export expect C function adoptExternalDocument
+En caso de error ``ImportError: lxml.etree does not export expect C function adoptExternalDocument`` o ``violacion de segmento``
 
 1. Desinstala dm.xmlsec.binding ``pip uninstall dm.xmlsec.binding`` o elimina el egg de buildout-cache/eggs.
 
